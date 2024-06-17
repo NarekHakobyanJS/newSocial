@@ -1,0 +1,10 @@
+.App {
+  width: 1140px;
+  padding: 0 20px;
+  margin : 0 auto;
+}
+
+.AppContent{
+  display: flex;
+  background-color: goldenrod;
+}

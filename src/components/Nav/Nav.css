@@ -1,0 +1,17 @@
+nav {
+    width: 20%;
+    background: gold;
+    padding: 10px;
+}
+
+.navlink > a{
+    display: block;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 10px;
+    border : 1px solid black;
+}
+
+.active {
+    color : red;
+}
