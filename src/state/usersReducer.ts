@@ -102,8 +102,8 @@ const usersReducer = (state: UserPageStateType = initialState, action: any): Use
     }
 }
 
-export const follow = (userId: number) => ({ type: FOLLOW, userId })
-export const unfollow = (userId: number) => ({ type: UNFOLLOW, userId })
+export const followSuccess = (userId: number) => ({ type: FOLLOW, userId })
+export const unfollowSuccess = (userId: number) => ({ type: UNFOLLOW, userId })
 export const setUsers = (users: any) => ({ type: SET_USERS, users })
 export const setCurrentPage = (currentPage: number) => ({ type: SET_CURRENT_PAGE, currentPage: currentPage })
 export const setTotalUserCount = (totalUsersCount: number) => ({ type: SET_TOTAL_USERS_COUNT, count: totalUsersCount })
@@ -111,8 +111,8 @@ export const toggleIsFetching = (isFetching: boolean) => ({ type: TOGGLE_IS_FETC
 export const toggleFollowingProgress = (isFetching: boolean, userId: number) => ({ type: TOGGLE_IS_FOLLOWING_IN_PROGRES, isFetching: isFetching, userId: userId })
 
 
-export const getUsersThunkCreator = (currentPage: number, pageSize: number) => {
-    return (dispatch  : any) => {
+export const getUsers = (currentPage: number, pageSize: number) => {
+    return (dispatch: any) => {
 
         dispatch(toggleIsFetching(true));
 
@@ -122,6 +122,43 @@ export const getUsersThunkCreator = (currentPage: number, pageSize: number) => {
                 dispatch(setTotalUserCount(data.totalCount))
                 dispatch(setUsers(data.items))
             })
+    }
+}
+
+export const follow = (userId: number) => {
+    return (dispatch: any) => {
+
+        dispatch(toggleFollowingProgress(true, userId))
+
+        socialAPI.follow(userId)
+            .then((response) => {
+                if (response.data.resultCode === 0) {
+                    dispatch(followSuccess(userId))
+                }
+                dispatch(toggleFollowingProgress(false, userId))
+            })
+
+
+
+    }
+}
+
+
+export const unfollow = (userId: number) => {
+    return (dispatch: any) => {
+
+        dispatch(toggleFollowingProgress(true, userId))
+
+        socialAPI.unfollow(userId)
+            .then((response) => {
+                if (response.data.resultCode === 0) {
+                    dispatch(unfollowSuccess(userId))
+                }
+                dispatch(toggleFollowingProgress(false, userId))
+            })
+
+
+
     }
 }
 

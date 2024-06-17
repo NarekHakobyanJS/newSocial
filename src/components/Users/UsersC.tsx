@@ -1,12 +1,12 @@
-import axios, { AxiosResponse } from 'axios'
+
 import React from 'react'
-import './Users.css'
 import Users from './Users'
-import { socialAPI } from '../../api/api'
+
+
+import './Users.css'
 
 type UsersPropsType = {
     users: Array<any>
-    setUsers: (users: Array<any>) => void
     unfollow: (userId: number) => void
     follow: (userId: number) => void,
     pageSize: number,
@@ -16,9 +16,9 @@ type UsersPropsType = {
     setCurrentPage: (p: number) => void
     setTotalUserCount: (totalCount: number) => void
     toggleIsFetching: (isFetching: boolean) => void
-    toggleFollowingProgress : (isFetching: boolean, userId : number) => void
-    followingInProgres : number [],
-    getUsersThunkCreator : (currentPage : number, pageSize : number) => void
+    toggleFollowingProgress: (isFetching: boolean, userId: number) => void
+    followingInProgres: number[],
+    getUsers: (currentPage: number, pageSize: number) => void
 }
 
 
@@ -27,27 +27,14 @@ class UsersAPIComponnet extends React.Component<UsersPropsType> {
 
 
     componentDidMount(): void {
-        this.props.getUsersThunkCreator(this.props.currentPage, this.props.pageSize)
-        // this.props.toggleIsFetching(true)
-        // socialAPI.getUsers(this.props.currentPage, this.props.pageSize)
-        //     .then((data: any) => {
-        //         this.props.toggleIsFetching(false)
-        //         this.props.setTotalUserCount(data.totalCount)
-        //         this.props.setUsers(data.items)
-
-        //     })
+        this.props.getUsers(this.props.currentPage, this.props.pageSize)
     }
 
 
     onPageChnaged = (page: number) => {
-        this.props.toggleIsFetching(true)
-        this.props.setCurrentPage(page)
-        socialAPI.getUsers(page, this.props.pageSize)
-            .then((data: any) => {
-                this.props.toggleIsFetching(false)
-                this.props.setUsers(data.items)
-            })
+        this.props.getUsers(page, this.props.pageSize)
     }
+
     render() {
 
         return (
