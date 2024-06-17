@@ -15,9 +15,19 @@ export const socialAPI = {
             .then((response) => response.data)
     },
     follow(userId: number) {
-        return instance.post(`https://social-network.samuraijs.com/api/1.0/follow/${userId}`, {})
+        return instance.post(`/follow/${userId}`, {})
     },
     unfollow(userId: number) {
         return instance.delete(`/follow/${userId}`)
     },
+    getProfile(userId : number | string | undefined){
+        return instance.get(`/profile/${userId}`)
+    }
+}
+
+
+export const authAPI = {
+    me(){
+        return instance.get('/auth/me')
+    }
 }

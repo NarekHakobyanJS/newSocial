@@ -1,3 +1,4 @@
+import { socialAPI } from "../api/api";
 
 const ADD_POST = "ADD_POST";
 const UPDATE_NEW_POST_TEXT = 'UPDATE_NEW_POST_TEXT';
@@ -101,4 +102,12 @@ export const addPostAC = (): AddPostActioCreatorType => ({ type: ADD_POST })
 export const updateNewPostTextAC = (payload: string): UpdateNewPostTextActionCreatorType => ({ type: UPDATE_NEW_POST_TEXT, payload})
 export const setUserProfile = (profile : ProfileAPIType ) : ProfileAPITypeActionCreator  => ({type : SET_USER_PROFILE, payload : profile})
 
+export const getUserProfile = (userId : number | string | undefined) => {
+    return (dispatch : any) => {
+        socialAPI.getProfile(userId)
+            .then((response: any) => {
+                dispatch(setUserProfile(response.data))
+            })
+    }
+}
 export default profileReducer
