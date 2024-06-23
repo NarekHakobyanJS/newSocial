@@ -2,11 +2,13 @@ import React, {ChangeEvent} from 'react'
 import './Dialogs.css'
 import DialogsItem from './DialogsItem/DialogsItem'
 import Message from './Message/Message'
+import { Navigate } from 'react-router-dom'
 
 type DialogsPropsType = {
     dialogsPage : any
     updateNewMessageBody : (body : string) => void
-    sendMessage : () => void
+    sendMessage : () => void,
+    isAuth : boolean
     
 }
 
@@ -22,6 +24,10 @@ const Dialogs = (props: DialogsPropsType ) => {
     const onNewMessageChange = (e : ChangeEvent<HTMLTextAreaElement>) => {
         let body = e.target.value
         props.updateNewMessageBody(body)
+    }
+
+    if(!props.isAuth){
+        return <Navigate to='/login'/>
     }
     return (
         <div className='dialogs'>

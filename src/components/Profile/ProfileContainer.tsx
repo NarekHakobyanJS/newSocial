@@ -1,43 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Profile.css'
 import Profile from './Profile'
-import axios from 'axios'
-import { connect } from 'react-redux'
-import { ProfileAPIType, setUserProfile } from '../../state/profileReducer'
-import { socialAPI } from '../../api/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserProfile} from '../../state/profileReducer'
+import { Navigate, useParams } from 'react-router-dom'
 
 
-type ProfileContainerAPIPropsType = {
-    setUserProfile : (profile : any) => void
-    profile : ProfileAPIType
+type ProfileContainerPropsType = {
 }
 
-class ProfileContainerAPI extends React.Component<ProfileContainerAPIPropsType> {
+function ProfileContainer(props: ProfileContainerPropsType) {
+   const dispatch = useDispatch<any>()
+    const {id} = useParams();
+    const profile = useSelector((state : any) => state.profilePage.profile)
+    const {isAuth} = useSelector((state : any)  => state.auth)
 
+    useEffect(() => {
+
+      dispatch(getUserProfile(id))
+    }, [])
     
-    componentDidMount(): void {
-        //socialAPI.getProfile(24961)
-        axios.get<any, any>(`https://social-network.samuraijs.com/api/1.0/profile/${24961}`)
-            .then((response: any) => {
-                this.props.setUserProfile(response.data)
-            })
+    if(!isAuth){
+        return <Navigate to='/login'/>
     }
-    render(): React.ReactNode {
-        return (
-            <div>
-                <Profile profile={this.props.profile}/>
-            </div>
-        )
-    }
+    return (
+        <div>
+            <Profile profile={profile} />
+        </div>
+    )
 }
-
-const mapStateToProps = (state: any) => {
-    return {
-        profile : state.profilePage.profile
-    }
-}
-
-
-const ProfileContainer = connect(mapStateToProps, { setUserProfile })(ProfileContainerAPI)
 
 export default ProfileContainer
