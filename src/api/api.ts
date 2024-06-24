@@ -21,10 +21,21 @@ export const socialAPI = {
         return instance.delete(`/follow/${userId}`)
     },
     getProfile(userId : number | string | undefined){
-        return instance.get(`/profile/${userId}`)
+        return profileAPI.getProfile(userId)
     }
 }
 
+export const profileAPI = {
+    getProfile(userId : number | string | undefined){
+        return instance.get(`/profile/${userId}`)
+    },
+    getStatus(userId : number | string | undefined){
+        return instance.get(`/profile/status/${userId}`)
+    },
+    updateStatus(newStatus : string | undefined){
+        return instance.put(`/profile/status`, {status : newStatus})
+    }
+}
 
 export const authAPI = {
     me(){

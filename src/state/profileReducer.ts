@@ -1,8 +1,9 @@
-import { socialAPI } from "../api/api";
+import { profileAPI, socialAPI } from "../api/api";
 
 const ADD_POST = "ADD_POST";
 const UPDATE_NEW_POST_TEXT = 'UPDATE_NEW_POST_TEXT';
 const SET_USER_PROFILE = 'SET_USER_PROFILE'
+const SET_STATUS = "SET_STATUS"
 export type PostType = {
     id: number,
     message: string | undefined,
@@ -35,7 +36,8 @@ export type ProfileAPIType = {
 export type ProfilePageStateType = {
     newPostText: any
     posts: PostDataType
-    profile : ProfileAPIType | null | string | undefined
+    profile : ProfileAPIType | null | string | undefined,
+    status : string | undefined
 }
 
 const initialState : ProfilePageStateType= {
@@ -44,7 +46,8 @@ const initialState : ProfilePageStateType= {
         { id: 1, message: 'hi muder fucker', likesCount: 1 },
         { id: 2, message: 'hi muder fucker', likesCount: 1 },
     ],
-    profile : null
+    profile : null,
+    status : ''
 }
 
 type AddPostActioCreatorType = {
@@ -62,9 +65,13 @@ type ProfileAPITypeActionCreator = {
     payload? : ProfileAPIType | string
 }
 
-type ActionProfileType = AddPostActioCreatorType | UpdateNewPostTextActionCreatorType | ProfileAPITypeActionCreator
+type ProfileStatusAPITypeActionCreator = {
+    type: string,
+    payload? : string | undefined
+}
+type ActionProfileType = AddPostActioCreatorType | UpdateNewPostTextActionCreatorType | ProfileAPITypeActionCreator | ProfileStatusAPITypeActionCreator
 
-const profileReducer = (state: ProfilePageStateType = initialState, action: ActionProfileType): ProfilePageStateType => {
+const profileReducer = (state: ProfilePageStateType = initialState, action: ActionProfileType): any => {
     switch (action.type) {
 
         case ADD_POST: {
@@ -92,6 +99,11 @@ const profileReducer = (state: ProfilePageStateType = initialState, action: Acti
                 ...state,
                 profile : action.payload
             }
+        case SET_STATUS :
+            return {
+                ...state,
+                status : action.payload
+            }
         default:
             return state
     }
@@ -101,6 +113,28 @@ const profileReducer = (state: ProfilePageStateType = initialState, action: Acti
 export const addPostAC = (): AddPostActioCreatorType => ({ type: ADD_POST })
 export const updateNewPostTextAC = (payload: string): UpdateNewPostTextActionCreatorType => ({ type: UPDATE_NEW_POST_TEXT, payload})
 export const setUserProfile = (profile : ProfileAPIType ) : ProfileAPITypeActionCreator  => ({type : SET_USER_PROFILE, payload : profile})
+export const setStatus = (status : any) => ({type : SET_STATUS, payload : status})
+
+
+export const getStatus = (userId : number | string | undefined) => {
+    return (dispatch : any) => {
+        profileAPI.getStatus(userId)
+            .then((response: any) => {
+                dispatch(setStatus(response.data))
+            })
+    }
+}
+
+export const updateStatus = (status :  string | undefined) => {
+    return (dispatch : any) => {
+        profileAPI.updateStatus(status)
+            .then((response: any) => {
+                if(response.data.resultCode === 0) {
+                    dispatch(setStatus(status))
+                }
+            })
+    }
+}
 
 export const getUserProfile = (userId : number | string | undefined) => {
     return (dispatch : any) => {
@@ -110,4 +144,5 @@ export const getUserProfile = (userId : number | string | undefined) => {
             })
     }
 }
+
 export default profileReducer

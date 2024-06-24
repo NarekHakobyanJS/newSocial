@@ -4,9 +4,10 @@ import ProfileStatus from '../ProfileStatus/ProfileStatus'
 
 type ProfileInfoPropsType = {
     profile : ProfileAPIType
+    status : string
   }
 
-const ProfileInfo = ({profile} : ProfileInfoPropsType) => {
+const ProfileInfo = ({profile, status} : ProfileInfoPropsType) => {
     if(!profile){
         return <h1>loading...</h1>
     }
@@ -16,7 +17,7 @@ const ProfileInfo = ({profile} : ProfileInfoPropsType) => {
             <div>
                 <h3>{profile.fullName} </h3>
                 <img src={profile?.photos?.large} />
-                <ProfileStatus status={'yoyio'}/> 
+                <ProfileStatus status={status}/> 
             </div>
         </div>
     )
