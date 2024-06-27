@@ -7,11 +7,16 @@ import UsersContainer from './components/Users/UsersContainer';
 import ProfileContainer from './components/Profile/ProfileContainer';
 import HeaderContainer from './components/Header/HeaderContainer';
 import Login from './components/Login/Login';
+import { useSelector } from 'react-redux';
 
 
 
 
 function App() {
+  const s = useSelector((state : any) => state.auth)
+
+  console.log(s);
+  
   return (
     <div className="App">
       <HeaderContainer />

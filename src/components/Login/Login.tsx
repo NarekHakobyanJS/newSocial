@@ -1,36 +1,38 @@
 
 import './Login.css'
 import { Field, Form, Formik } from 'formik'
-import axios from 'axios'
+import { useDispatch, useSelector } from 'react-redux'
+import { login } from '../../state/authReducer'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 
 type LoginFormPropsType = {
-  autorizationUserLogin : (user : any) => void
+  autorizationUserLogin: (user: any) => void
 }
 
-const LoginForm = ({autorizationUserLogin} : any) => {
+const LoginForm = ({ autorizationUserLogin }: any) => {
   return (
     <Formik
       initialValues={{
         login: '',
         password: '',
-        rememberMe : false
+        rememberMe: false
       }}
       onSubmit={(values) => autorizationUserLogin(values)}
     >
       {
-        ({values, handleChange, handleSubmit}) => (
+        ({ values, handleChange, handleSubmit }) => (
           <form onSubmit={handleSubmit}>
             <div>
-              <Field name='login'/>
+              <Field name='login' />
             </div>
             <div>
-            <Field name='password'/>
-             
+              <Field name='password' />
+
             </div>
             <div>
               {/* <Field /> */}
-              <input name='rememberMe' type="checkbox" checked={values.rememberMe} onChange={handleChange}/>
+              <input name='rememberMe' type="checkbox" checked={values.rememberMe} onChange={handleChange} />
               <span>rememeber me</span>
             </div>
             <div>
@@ -43,22 +45,21 @@ const LoginForm = ({autorizationUserLogin} : any) => {
   )
 }
 const Login = () => {
+  const dispatch = useDispatch<any>()
+  const auth = useSelector((state: any) => state.auth)
+  
 
-  const autorizationUserLogin = (user : any) => {
-    console.log(user);
-    axios.post('https://social-network.samuraijs.com/api/1.0/auth/login',
-     {
-      email : user.login,
-      password : user.password,
-      rememberMe : user.rememberMe
+  const autorizationUserLogin = (user: any) => {
+    dispatch(login(user.login, user.password, user.rememberMe))
+  }
 
-     })
-     .then((res) => console.log(res.data))
+  if(auth.isAuth){
+    return <Navigate to={`/profile/${auth.userId}`}/>
   }
   return (
     <div>
       <h2>Login</h2>
-      <LoginForm autorizationUserLogin={autorizationUserLogin}/>
+      <LoginForm autorizationUserLogin={autorizationUserLogin} />
     </div>
   )
 }
