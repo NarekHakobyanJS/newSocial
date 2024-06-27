@@ -19,7 +19,7 @@ function App() {
         <Nav />
         <Routes>
           <Route path='/profile/:id' element={<ProfileContainer />} />
-          <Route path='/dialogs' element={<DialogsContainer/>} />
+          <Route path='/dialogs' element={<DialogsContainer updateNewMessageBody={() => {}}/>} />
           <Route path="/users" element={<UsersContainer />}/>
           <Route path='/login' element={<Login /> }/>
         </Routes>

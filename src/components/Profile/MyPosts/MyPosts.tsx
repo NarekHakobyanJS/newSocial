@@ -1,39 +1,50 @@
 import React, { useRef, ChangeEvent } from 'react'
 import Post from './Post/Post'
+import { Field, Formik } from 'formik'
 
-           
+
+type AddNewPostFormPropsType = {
+    onSubmit : (values : any) => void
+}
+const AddNewPostForm = ({onSubmit} : AddNewPostFormPropsType) => {
+    return (
+        <Formik
+            initialValues={{
+                newPost : ''
+            }}
+            onSubmit={(values) => onSubmit(values)}
+        >
+            {
+                ({handleSubmit}) => (
+                    <form onSubmit={handleSubmit}>
+                    <Field name='newPost' component={'textarea'}/>
+                    <button type='submit'>add post</button>
+                </form>
+                )
+            }
+        </Formik>
+    )
+}
 
 type MyPostsPropsType = {
     posts: any,
     newPostText: string | undefined
-    updateNewPostText : (text : string) => void
-    addPost : () => void
+   
+    addPost : (newPost : string) => void
 }
 
 const MyPosts = (props: MyPostsPropsType ) => {
-    const textareaRef: any = useRef()
+    
 
-    const onAddPost = () => {
-       props.addPost()
-       // props.dispatch(addPostAC())
+    const onAddPost = (values : any) => {
+       props.addPost(values.newPost)
     }
 
-    const onPostChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        let text = textareaRef.current.value
-        props.updateNewPostText(text)
-        //props.dispatch(updateNewPostTextAC(text))
-    }
+    
     return (
         <div>
             My Posts
-            <div>
-                <textarea
-                    ref={textareaRef}
-                    value={props.newPostText}
-                    onChange={onPostChange}
-                />
-                <button onClick={onAddPost}>add post</button>
-            </div>
+            <AddNewPostForm onSubmit={onAddPost}/>
             {
                 props.posts.map((post : any) => {
                     return <Post key={post.id} post={post} />

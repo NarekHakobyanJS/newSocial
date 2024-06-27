@@ -1,6 +1,4 @@
 
-
-const UPDATE_NEW_MESSAGE_BODY = 'UPDATE_NEW_MESSAGE_BODY';
 const SEND_MESSAGE = 'SEND_MESSAGE';
 
 type DialogsType = {
@@ -38,17 +36,12 @@ const initialState: DialogsPageStateType = {
 
 const dialogsReducer = (state: DialogsPageStateType = initialState, action: any): DialogsPageStateType => {
     switch (action.type) {
-        case UPDATE_NEW_MESSAGE_BODY: {
-            return {
-                ...state,
-                newMessage: action.payload
-            }
-        }
+        
         case SEND_MESSAGE: {
-            let body = state.newMessage
+           
             return {
                 ...state,
-                messages: [...state.messages, { id: 5, message: body }],
+                messages: [...state.messages, { id: 5, message: action.payload }],
                 newMessage: ''
             }
         }
@@ -57,8 +50,7 @@ const dialogsReducer = (state: DialogsPageStateType = initialState, action: any)
     }
 }
 
-export const sendMessageAC = () => ({ type: SEND_MESSAGE })
-export const updateNewMessageBodyAC = (newMessage: string) => ({ type: UPDATE_NEW_MESSAGE_BODY, payload: newMessage })
+export const sendMessageAC = (newMessage : string) => ({ type: SEND_MESSAGE, payload : newMessage })
 
 
 export default dialogsReducer

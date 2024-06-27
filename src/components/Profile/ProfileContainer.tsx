@@ -22,9 +22,9 @@ function ProfileContainer(props: ProfileContainerPropsType) {
       dispatch(getStatus(id))
     }, [])
     
-    if(!isAuth){
-        return <Navigate to='/login'/>
-    }
+    // if(!isAuth){
+    //     return <Navigate to='/login'/>
+    // }
     return (
         <div>
             <Profile status={status} profile={profile} />
