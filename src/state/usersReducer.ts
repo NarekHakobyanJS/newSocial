@@ -1,4 +1,4 @@
-import { ThunkDispatch } from "redux-thunk"
+
 import { socialAPI } from "../api/api"
 // import { AppDispatch } from "./store"
 

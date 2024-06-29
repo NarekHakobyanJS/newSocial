@@ -1,7 +1,7 @@
 import { profileAPI, socialAPI } from "../api/api";
-const ADD_POST = "ADD_POST";
-const SET_USER_PROFILE = 'SET_USER_PROFILE'
-const SET_STATUS = "SET_STATUS"
+const ADD_POST = "profile/ADD_POST";
+const SET_USER_PROFILE = 'profile/SET_USER_PROFILE'
+const SET_STATUS = "profile/SET_STATUS"
 
 export type PostType = {
     id: number,
@@ -109,31 +109,27 @@ export const setStatus = (status: any) => ({ type: SET_STATUS, payload: status }
 
 
 export const getStatus = (userId: number | string | undefined) => {
-    return (dispatch: any) => {
-        profileAPI.getStatus(userId)
-            .then((response: any) => {
-                dispatch(setStatus(response.data))
-            })
+    return async (dispatch: any) => {
+        const response = await profileAPI.getStatus(userId)
+
+        dispatch(setStatus(response.data))
     }
 }
 
 export const updateStatus = (status: string | undefined) => {
-    return (dispatch: any) => {
-        profileAPI.updateStatus(status)
-            .then((response: any) => {
-                if (response.data.resultCode === 0) {
-                    dispatch(setStatus(status))
-                }
-            })
+    return async (dispatch: any) => {
+        const response = await profileAPI.updateStatus(status)
+
+        if (response.data.resultCode === 0) {
+            dispatch(setStatus(status))
+        }
     }
 }
 
 export const getUserProfile = (userId: number | string | undefined) => {
-    return (dispatch: any) => {
-        socialAPI.getProfile(userId)
-            .then((response: any) => {
-                dispatch(setUserProfile(response.data))
-            })
+    return async (dispatch: any) => {
+        const response = await socialAPI.getProfile(userId)
+        dispatch(setUserProfile(response.data))
     }
 }
 

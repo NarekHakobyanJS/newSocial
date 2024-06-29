@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { UsersStateType } from '../../state/usersReducer'
 import { NavLink } from 'react-router-dom'
 
@@ -14,6 +15,11 @@ type UsersPropsType = {
 }
 
 const Users = (props: UsersPropsType) => {
+
+    let portionSize = 10
+    let [portionNumber, setPortionNumber] = useState(1)
+    let leftPortionPageNumber = (portionNumber - 1) * portionSize + 1
+    let rightPortionPageNumber = portionNumber * portionSize
     let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
 
     let pages = []
@@ -25,12 +31,22 @@ const Users = (props: UsersPropsType) => {
         <div>
             <div>
                 {
-                    pages.map((p: number) => {
+                    portionNumber > 1 && 
+                    <button onClick={() => {setPortionNumber(portionNumber - 1)}}>prev</button>
+                }
+                {
+                    pages
+                    .filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
+                    .map((p: number) => {
                         return <button
                             key={p}
                             onClick={() => props.onPageChnaged(p)}
                             className={p === props.currentPage ? 'activeBTN' : ''}>{p}</button>
                     })
+                }
+                {
+                    pagesCount > portionNumber && 
+                    <button onClick={() => {setPortionNumber(portionNumber + 1)}}>next</button>
                 }
             </div>
             {
@@ -45,6 +61,7 @@ const Users = (props: UsersPropsType) => {
                             <div>
                                 {user.followed
                                     ? <button
+                                    
                                         disabled={props.followingInProgres.some((id) => id === user.id)}
                                         onClick={() => { props.unfollow(user.id) }} >unfollow</button>
                                     : <button

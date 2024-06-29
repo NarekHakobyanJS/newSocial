@@ -11,9 +11,9 @@ type HeaderContainerPropsType = {
 }
 class HeaderContainer extends React.Component<HeaderContainerPropsType> {
 
-    componentDidMount(): void {
-        this.props.getAuthUserData()
-    }
+    // componentDidMount(): void {
+    //     this.props.getAuthUserData()
+    // }
     render(): React.ReactNode {
         return (
             <>

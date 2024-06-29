@@ -7,15 +7,17 @@ import UsersContainer from './components/Users/UsersContainer';
 import ProfileContainer from './components/Profile/ProfileContainer';
 import HeaderContainer from './components/Header/HeaderContainer';
 import Login from './components/Login/Login';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getAuthUserData } from './state/authReducer';
+import { useEffect } from 'react';
 
 
 
 function App() {
-  const s = useSelector((state : any) => state.auth)
-
-  console.log(s);
+  const dispatch = useDispatch<any>()
+  useEffect(() => {
+    dispatch(getAuthUserData())
+  }, [])
   
   return (
     <div className="App">

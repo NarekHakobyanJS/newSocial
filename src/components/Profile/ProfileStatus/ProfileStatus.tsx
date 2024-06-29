@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import './ProfileStatus.css'
 import { updateStatus } from '../../../state/profileReducer'
 import { useDispatch } from 'react-redux'
@@ -10,6 +10,9 @@ const ProfileStatus = (props: ProfileStatusPropsType) => {
     const [editeMode, setEditeMode] = useState(false)
     const [status, setStatus] = useState(props.status)
     
+    useEffect(() => {
+        setStatus(props.status)
+    }, [props.status])
     const dispatch = useDispatch<any>()
     
     const activetEditeMode = () => {
