@@ -16,6 +16,8 @@ function ProfileContainer(props: ProfileContainerPropsType) {
     const {profile, status} = useSelector((state : any) => state.profilePage)
     const {isAuth} = useSelector((state : any)  => state.auth)
 
+
+    const ownerId = 31379
     useEffect(() => {
 
       dispatch(getUserProfile(id))
@@ -27,7 +29,10 @@ function ProfileContainer(props: ProfileContainerPropsType) {
     // }
     return (
         <div>
-            <Profile status={status} profile={profile} />
+            <Profile
+            isOwner={ownerId}
+             status={status} 
+             profile={profile} />
         </div>
     )
 }

@@ -2,7 +2,7 @@ import { profileAPI, socialAPI } from "../api/api";
 const ADD_POST = "profile/ADD_POST";
 const SET_USER_PROFILE = 'profile/SET_USER_PROFILE'
 const SET_STATUS = "profile/SET_STATUS"
-
+const  SAVE_PHOTO = '/profileSAVE_PHOTO'
 export type PostType = {
     id: number,
     message: string | undefined,
@@ -35,7 +35,7 @@ export type ProfileAPIType = {
 export type ProfilePageStateType = {
     newPostText: any
     posts: PostDataType
-    profile: ProfileAPIType | null | string | undefined,
+    profile: any
     status: string | undefined
 }
 
@@ -97,6 +97,11 @@ const profileReducer = (state: ProfilePageStateType = initialState, action: Acti
                 ...state,
                 status: action.payload
             }
+        case SAVE_PHOTO :
+            return {
+                ...state,
+                profile : {...state.profile, photos : action.payload}
+            }
         default:
             return state
     }
@@ -106,7 +111,7 @@ const profileReducer = (state: ProfilePageStateType = initialState, action: Acti
 export const addPostAC = (newPost: string): AddPostActioCreatorType => ({ type: ADD_POST, payload: newPost })
 export const setUserProfile = (profile: ProfileAPIType): ProfileAPITypeActionCreator => ({ type: SET_USER_PROFILE, payload: profile })
 export const setStatus = (status: any) => ({ type: SET_STATUS, payload: status })
-
+export const savePhotoSuccess = (photos : any) => ({type : SAVE_PHOTO, paylaod : photos})
 
 export const getStatus = (userId: number | string | undefined) => {
     return async (dispatch: any) => {
@@ -130,6 +135,13 @@ export const getUserProfile = (userId: number | string | undefined) => {
     return async (dispatch: any) => {
         const response = await socialAPI.getProfile(userId)
         dispatch(setUserProfile(response.data))
+    }
+}
+
+export const savePhoto = (file : any) => {
+    return async (dispatch: any) => {
+        const response = await profileAPI.savePhoto(file)
+       dispatch(savePhotoSuccess(response.data.photos))
     }
 }
 

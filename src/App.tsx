@@ -2,16 +2,18 @@
 import Nav from './components/Nav/Nav';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import DialogsContainer from './components/Dialogs/DialogsContainer';
-import UsersContainer from './components/Users/UsersContainer';
-import ProfileContainer from './components/Profile/ProfileContainer';
+
+
 import HeaderContainer from './components/Header/HeaderContainer';
 import Login from './components/Login/Login';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { getAuthUserData } from './state/authReducer';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import React from 'react';
 
-
+const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
+const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
+const UsersContainer = React.lazy(() => import('./components/Users/UsersContainer'));
 
 function App() {
   const dispatch = useDispatch<any>()
@@ -25,9 +27,9 @@ function App() {
       <div className='AppContent'>
         <Nav />
         <Routes>
-          <Route path='/profile/:id' element={<ProfileContainer />} />
-          <Route path='/dialogs' element={<DialogsContainer updateNewMessageBody={() => {}}/>} />
-          <Route path="/users" element={<UsersContainer />}/>
+          <Route path='/profile/:id' element={<Suspense fallback={<h1>loding...</h1>}><ProfileContainer /></Suspense>} />
+          <Route path='/dialogs' element={<Suspense fallback={<h1>loding...</h1>}><DialogsContainer updateNewMessageBody={() => {}}/></Suspense>} />
+          <Route path="/users" element={<Suspense fallback={<h1>loding...</h1>}><UsersContainer /></Suspense>}/>
           <Route path='/login' element={<Login /> }/>
         </Routes>
       </div>

@@ -7,12 +7,13 @@ import { ProfileAPIType } from '../../state/profileReducer'
 type ProfilePropsType = {
   profile : ProfileAPIType
   status : string
+  isOwner : number
 }
 
-const Profile = ({profile, status} : ProfilePropsType) => {
+const Profile = ({profile, status,isOwner} : ProfilePropsType) => {
   return (
     <div>
-      <ProfileInfo profile={profile} status={status}/>
+      <ProfileInfo isOwner={isOwner} profile={profile} status={status}/>
       <MyPostsContainer />
     </div>
   )
