@@ -34,7 +34,7 @@ const ProfileStatus = (props: ProfileStatusPropsType) => {
                 !editeMode
                     ?
                     <div>
-                        <span onDoubleClick={activetEditeMode}>{props.status ? props.status : 'no status'}</span>
+                       <b>status : </b> <span onDoubleClick={activetEditeMode}>{props.status ? props.status : 'no status'}</span>
                     </div>
                     :
                     <div>

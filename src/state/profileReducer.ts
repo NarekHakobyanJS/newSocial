@@ -2,7 +2,7 @@ import { profileAPI, socialAPI } from "../api/api";
 const ADD_POST = "profile/ADD_POST";
 const SET_USER_PROFILE = 'profile/SET_USER_PROFILE'
 const SET_STATUS = "profile/SET_STATUS"
-const  SAVE_PHOTO = '/profileSAVE_PHOTO'
+const SAVE_PHOTO = '/profileSAVE_PHOTO'
 export type PostType = {
     id: number,
     message: string | undefined,
@@ -11,27 +11,29 @@ export type PostType = {
 
 export type PostDataType = Array<PostType>
 
-export type ProfileAPIType = {
-    aboutMe: string,
-    contacts: {
-        facebook: string | null,
-        website: string | null,
-        vk: string | null,
-        twitter: string | null,
-        instagram: string | null,
-        youtube: string | null,
-        github: string | null,
-        mainLink: string | null,
-    },
-    lookingForAJob: boolean,
-    lookingForAJobDescription: string,
-    fullName: string,
-    userId: number,
-    photos: {
-        small: string | undefined,
-        large: string | undefined
-    }
-}
+export type ProfileAPIType = any
+
+// {
+//     aboutMe: string,
+//     contacts: {
+//         facebook: string | null,
+//         website: string | null,
+//         vk: string | null,
+//         twitter: string | null,
+//         instagram: string | null,
+//         youtube: string | null,
+//         github: string | null,
+//         mainLink: string | null,
+//     },
+//     lookingForAJob: boolean,
+//     lookingForAJobDescription: string,
+//     fullName: string,
+//     userId: number,
+//     photos: {
+//         small: string | undefined,
+//         large: string | undefined
+//     }
+// }
 export type ProfilePageStateType = {
     newPostText: any
     posts: PostDataType
@@ -61,7 +63,7 @@ type UpdateNewPostTextActionCreatorType = {
 
 type ProfileAPITypeActionCreator = {
     type: string,
-    payload?: ProfileAPIType | string
+    payload?: ProfileAPIType | string | any
 }
 
 type ProfileStatusAPITypeActionCreator = {
@@ -97,10 +99,10 @@ const profileReducer = (state: ProfilePageStateType = initialState, action: Acti
                 ...state,
                 status: action.payload
             }
-        case SAVE_PHOTO :
+        case SAVE_PHOTO:
             return {
                 ...state,
-                profile : {...state.profile, photos : action.payload}
+                profile: { ...state.profile, photos: action.payload }
             }
         default:
             return state
@@ -111,8 +113,7 @@ const profileReducer = (state: ProfilePageStateType = initialState, action: Acti
 export const addPostAC = (newPost: string): AddPostActioCreatorType => ({ type: ADD_POST, payload: newPost })
 export const setUserProfile = (profile: ProfileAPIType): ProfileAPITypeActionCreator => ({ type: SET_USER_PROFILE, payload: profile })
 export const setStatus = (status: any) => ({ type: SET_STATUS, payload: status })
-export const savePhotoSuccess = (photos : any) => ({type : SAVE_PHOTO, paylaod : photos})
-
+export const savePhotoSuccess = (photos: any) => ({ type: SAVE_PHOTO, paylaod: photos })
 export const getStatus = (userId: number | string | undefined) => {
     return async (dispatch: any) => {
         const response = await profileAPI.getStatus(userId)
@@ -138,10 +139,19 @@ export const getUserProfile = (userId: number | string | undefined) => {
     }
 }
 
-export const savePhoto = (file : any) => {
+export const savePhoto = (file: any) => {
     return async (dispatch: any) => {
         const response = await profileAPI.savePhoto(file)
-       dispatch(savePhotoSuccess(response.data.photos))
+        dispatch(savePhotoSuccess(response.data.photos))
+    }
+}
+
+export const saveProfile = (profile: any) => {
+    return async (dispatch: any, getState: any) => {
+        let userId = getState().auth.userId
+
+        const response = await profileAPI.saveProfile(profile)
+        dispatch(getUserProfile(userId))
     }
 }
 
