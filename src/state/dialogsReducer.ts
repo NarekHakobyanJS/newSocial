@@ -1,4 +1,3 @@
-
 const SEND_MESSAGE = 'dialogs/SEND_MESSAGE';
 
 type DialogsType = {
@@ -6,35 +5,26 @@ type DialogsType = {
     name: string
 }
 
-export type DialogsDataType = Array<DialogsType>
 
 type MessagesType = {
     id: number,
     message: string
 }
-export type MessagesDataType = Array<MessagesType>
 
-
-export type DialogsPageStateType = {
-    messages: MessagesDataType,
-    dialogs: DialogsDataType,
-    newMessage: string
-}
-
-const initialState: DialogsPageStateType = {
+const initialState = {
     messages: [
         { id: 1, message: 'its my 1 post' },
         { id: 2, message: 'its my 3 post' },
-    ],
+    ] as Array<MessagesType>,
     dialogs: [
         { id: 1, name: "Narek" },
         { id: 2, name: "Sveta" }
-    ],
-    newMessage: ''
+    ] as Array<DialogsType>,
+    newMessage: '' as string
 }
 
-
-const dialogsReducer = (state: DialogsPageStateType = initialState, action: any): DialogsPageStateType => {
+export type InitialStateType = typeof initialState
+const dialogsReducer = (state = initialState, action: any): InitialStateType => {
     switch (action.type) {
         
         case SEND_MESSAGE: {
@@ -42,7 +32,7 @@ const dialogsReducer = (state: DialogsPageStateType = initialState, action: any)
             return {
                 ...state,
                 messages: [...state.messages, { id: 5, message: action.payload }],
-                newMessage: ''
+                newMessage: '',
             }
         }
         default:
@@ -50,7 +40,11 @@ const dialogsReducer = (state: DialogsPageStateType = initialState, action: any)
     }
 }
 
-export const sendMessageAC = (newMessage : string) => ({ type: SEND_MESSAGE, payload : newMessage })
+type SendMessageACType = {
+    type : typeof SEND_MESSAGE,
+    payload : string
+}
+export const sendMessageAC = (newMessage : string) : SendMessageACType => ({ type: SEND_MESSAGE, payload : newMessage })
 
 
 export default dialogsReducer

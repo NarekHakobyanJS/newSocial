@@ -1,8 +1,11 @@
 import { profileAPI, socialAPI } from "../api/api";
+import { PhotosType } from "../types/types";
 const ADD_POST = "profile/ADD_POST";
 const SET_USER_PROFILE = 'profile/SET_USER_PROFILE'
 const SET_STATUS = "profile/SET_STATUS"
 const SAVE_PHOTO = '/profileSAVE_PHOTO'
+
+
 export type PostType = {
     id: number,
     message: string | undefined,
@@ -13,48 +16,46 @@ export type PostDataType = Array<PostType>
 
 export type ProfileAPIType = any
 
-// {
-//     aboutMe: string,
-//     contacts: {
-//         facebook: string | null,
-//         website: string | null,
-//         vk: string | null,
-//         twitter: string | null,
-//         instagram: string | null,
-//         youtube: string | null,
-//         github: string | null,
-//         mainLink: string | null,
-//     },
-//     lookingForAJob: boolean,
-//     lookingForAJobDescription: string,
-//     fullName: string,
-//     userId: number,
-//     photos: {
-//         small: string | undefined,
-//         large: string | undefined
-//     }
-// }
+
 export type ProfilePageStateType = {
     newPostText: any
     posts: PostDataType
     profile: any
     status: string | undefined
 }
+type ContactsType = {
+    facebook: string | null,
+    website: string | null,
+    vk: string | null,
+    twitter: string | null,
+    instagram: string | null,
+    youtube: string | null,
+    github: string | null,
+    mainLink: string | null,
+}
 
-const initialState: ProfilePageStateType = {
-    newPostText: '',
+// Profile
+type ProfileType = {
+    aboutMe: string,
+    contacts: ContactsType,
+    lookingForAJob: boolean,
+    lookingForAJobDescription: string,
+    fullName: string,
+    userId: number,
+    photos: PhotosType
+}
+
+const initialState = {
+    newPostText: '' as string,
     posts: [
         { id: 1, message: 'hi muder fucker', likesCount: 1 },
         { id: 2, message: 'hi muder fucker', likesCount: 1 },
-    ],
-    profile: null,
-    status: ''
+    ] as Array<PostType>,
+    profile: null as ProfileType | null,
+    status: '' as string
 }
 
-type AddPostActioCreatorType = {
-    type: string,
-    payload?: string
-}
+export type InitialStateType = typeof initialState
 
 type UpdateNewPostTextActionCreatorType = {
     type: string,
@@ -72,7 +73,7 @@ type ProfileStatusAPITypeActionCreator = {
 }
 type ActionProfileType = AddPostActioCreatorType | UpdateNewPostTextActionCreatorType | ProfileAPITypeActionCreator | ProfileStatusAPITypeActionCreator
 
-const profileReducer = (state: ProfilePageStateType = initialState, action: ActionProfileType): any => {
+const profileReducer = (state = initialState, action: ActionProfileType): InitialStateType => {
     switch (action.type) {
 
         case ADD_POST: {
@@ -102,18 +103,36 @@ const profileReducer = (state: ProfilePageStateType = initialState, action: Acti
         case SAVE_PHOTO:
             return {
                 ...state,
-                profile: { ...state.profile, photos: action.payload }
+                profile: { ...state.profile, photos: action.payload } as ProfileType
             }
         default:
             return state
     }
 }
 
+type AddPostActioCreatorType = {
+    type: typeof ADD_POST,
+    payload: string
+}
 
 export const addPostAC = (newPost: string): AddPostActioCreatorType => ({ type: ADD_POST, payload: newPost })
-export const setUserProfile = (profile: ProfileAPIType): ProfileAPITypeActionCreator => ({ type: SET_USER_PROFILE, payload: profile })
-export const setStatus = (status: any) => ({ type: SET_STATUS, payload: status })
-export const savePhotoSuccess = (photos: any) => ({ type: SAVE_PHOTO, paylaod: photos })
+type SetUserProfileActioType = {
+    type: typeof SET_USER_PROFILE
+    payload: ProfileType
+}
+export const setUserProfile = (profile: ProfileType): SetUserProfileActioType => ({ type: SET_USER_PROFILE, payload: profile })
+type SetStatusActionType = {
+    type : typeof SET_STATUS,
+    payload : string
+}
+export const setStatus = (status: string) : SetStatusActionType => ({ type: SET_STATUS, payload: status })
+type SavePhotoSuccessActionType = {
+    type : typeof SAVE_PHOTO,
+    paylaod : PhotosType
+}
+export const savePhotoSuccess = (photos: PhotosType) :  SavePhotoSuccessActionType => ({ type: SAVE_PHOTO, paylaod: photos })
+
+
 export const getStatus = (userId: number | string | undefined) => {
     return async (dispatch: any) => {
         const response = await profileAPI.getStatus(userId)
@@ -122,7 +141,7 @@ export const getStatus = (userId: number | string | undefined) => {
     }
 }
 
-export const updateStatus = (status: string | undefined) => {
+export const updateStatus = (status: string) => {
     return async (dispatch: any) => {
         const response = await profileAPI.updateStatus(status)
 

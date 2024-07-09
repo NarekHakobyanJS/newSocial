@@ -4,6 +4,7 @@ import Profile from './Profile'
 import { useDispatch, useSelector } from 'react-redux'
 import { getStatus, getUserProfile} from '../../state/profileReducer'
 import { Navigate, useParams } from 'react-router-dom'
+import { AppStateType } from '../../state/store'
 
 
 type ProfileContainerPropsType = {
@@ -14,7 +15,7 @@ function ProfileContainer(props: ProfileContainerPropsType) {
    const dispatch = useDispatch<any>()
     const {id} = useParams();
     const {profile, status} = useSelector((state : any) => state.profilePage)
-    const {isAuth} = useSelector((state : any)  => state.auth)
+    const {isAuth} = useSelector((state : AppStateType)  => state.auth)
 
 
     const ownerId = 31379

@@ -2,8 +2,6 @@
 import Nav from './components/Nav/Nav';
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-
-
 import HeaderContainer from './components/Header/HeaderContainer';
 import Login from './components/Login/Login';
 import { useDispatch } from 'react-redux';
@@ -31,6 +29,7 @@ function App() {
           <Route path='/dialogs' element={<Suspense fallback={<h1>loding...</h1>}><DialogsContainer updateNewMessageBody={() => {}}/></Suspense>} />
           <Route path="/users" element={<Suspense fallback={<h1>loding...</h1>}><UsersContainer /></Suspense>}/>
           <Route path='/login' element={<Login /> }/>
+          <Route path='*' element={<><img src='https://i0.wp.com/learn.onemonth.com/wp-content/uploads/2017/08/1-10.png?fit=845%2C503&ssl=1' /></>}/>
         </Routes>
       </div>
 

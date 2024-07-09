@@ -1,12 +1,12 @@
-import { useState } from 'react'
-import { UsersStateType } from '../../state/usersReducer'
+import React, { useState } from 'react'
+import { UserType } from '../../state/usersReducer'
 import { NavLink } from 'react-router-dom'
 
 type UsersPropsType = {
     totalUsersCount: number,
     pageSize: number,
     currentPage: number,
-    users: Array<UsersStateType>,
+    users: Array<UserType>,
     onPageChnaged: (p: number) => void,
     unfollow: (userId: number) => void,
     follow: (userId: number) => void,
@@ -14,7 +14,7 @@ type UsersPropsType = {
     followingInProgres: number[]
 }
 
-const Users = (props: UsersPropsType) => {
+const Users: React.FC<UsersPropsType> = (props) => {
 
     let portionSize = 10
     let [portionNumber, setPortionNumber] = useState(1)
@@ -31,22 +31,22 @@ const Users = (props: UsersPropsType) => {
         <div>
             <div>
                 {
-                    portionNumber > 1 && 
-                    <button onClick={() => {setPortionNumber(portionNumber - 1)}}>prev</button>
+                    portionNumber > 1 &&
+                    <button onClick={() => { setPortionNumber(portionNumber - 1) }}>prev</button>
                 }
                 {
                     pages
-                    .filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
-                    .map((p: number) => {
-                        return <button
-                            key={p}
-                            onClick={() => props.onPageChnaged(p)}
-                            className={p === props.currentPage ? 'activeBTN' : ''}>{p}</button>
-                    })
+                        .filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
+                        .map((p: number) => {
+                            return <button
+                                key={p}
+                                onClick={() => props.onPageChnaged(p)}
+                                className={p === props.currentPage ? 'activeBTN' : ''}>{p}</button>
+                        })
                 }
                 {
-                    pagesCount > portionNumber && 
-                    <button onClick={() => {setPortionNumber(portionNumber + 1)}}>next</button>
+                    pagesCount > portionNumber &&
+                    <button onClick={() => { setPortionNumber(portionNumber + 1) }}>next</button>
                 }
             </div>
             {
@@ -61,7 +61,7 @@ const Users = (props: UsersPropsType) => {
                             <div>
                                 {user.followed
                                     ? <button
-                                    
+
                                         disabled={props.followingInProgres.some((id) => id === user.id)}
                                         onClick={() => { props.unfollow(user.id) }} >unfollow</button>
                                     : <button

@@ -2,9 +2,10 @@ import React from 'react'
 import { NavLink } from 'react-router-dom'
 import './Nav.css'
 import { useSelector } from 'react-redux'
+import { AppStateType } from '../../state/store'
 
 const Nav = () => {
- const {userId} = useSelector((state : any) => state.auth)
+ const {userId} = useSelector((state : AppStateType) => state.auth)
 
  
   return (

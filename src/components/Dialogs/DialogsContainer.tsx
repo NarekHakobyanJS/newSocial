@@ -2,12 +2,9 @@ import './Dialogs.css'
 import { sendMessageAC} from '../../state/dialogsReducer';
 import Dialogs from './Dialogs';
 import { connect } from 'react-redux';
+import { AppStateType } from '../../state/store';
 
-type DialogsContainerPropsType = {
-    store : any
-}
-
-const mapStateToProps = (state : any) => {
+const mapStateToProps = (state : AppStateType) => {
     return {
         dialogsPage : state.dialogsPage,
         isAuth : state.auth.isAuth

@@ -3,6 +3,7 @@ import './Header.css'
 import Header from './Header'
 import { connect } from 'react-redux'
 import { getAuthUserData } from '../../state/authReducer'
+import { AppStateType } from '../../state/store'
 
 type HeaderContainerPropsType = {
     getAuthUserData : () => void

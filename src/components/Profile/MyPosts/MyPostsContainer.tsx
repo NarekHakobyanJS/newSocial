@@ -1,13 +1,14 @@
 import { connect } from 'react-redux'
 import { addPostAC } from '../../../state/profileReducer'
 import MyPosts from './MyPosts'
+import { AppStateType } from '../../../state/store'
 
 
 type MyPostsContainerPropsType = {
     store: any
 
 }
-const mapStateToProps = (state : any) => {
+const mapStateToProps = (state : AppStateType) => {
     return {
         posts : state.profilePage.posts,
         newPostText : state.profilePage.newPostText
