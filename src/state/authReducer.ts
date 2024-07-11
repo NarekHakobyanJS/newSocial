@@ -3,13 +3,6 @@ import { authAPI, securityAPI } from "../api/api"
 const SET_USER_DATA = 'auth/SET_USER_DATA'
 const GET_CAPTCHA_URL = 'auth/GET_CAPTCHA_URL'
 
-// export type InitialStateType1 = {
-//     userId: null | number,
-//     email: null | string,
-//     login: null | string,
-//     isAuth: boolean,
-//     captchaUrl : null | string
-// }
 const initialState = {
     userId: null as null | number,
     email: null as null | string,
@@ -60,7 +53,6 @@ export const getCaptchaUrlSuccess = (url: string): GetCaptchaUrlSuccessActionTyp
 export const getAuthUserData = () => {
     return async (dispatch: any) => {
         const response = await authAPI.me()
-
         if (response.data.resultCode === 0) {
             const { login, email, id } = response.data.data
             dispatch(setAuthUserData(id, email, login, true))

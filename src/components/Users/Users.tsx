@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { UserType } from '../../state/usersReducer'
+import { FilterType, UserType } from '../../state/usersReducer'
 import { NavLink } from 'react-router-dom'
+import UsersSearchForm from './UsersSearchForm'
 
 type UsersPropsType = {
     totalUsersCount: number,
@@ -11,7 +12,8 @@ type UsersPropsType = {
     unfollow: (userId: number) => void,
     follow: (userId: number) => void,
     toggleFollowingProgress: (isFetching: boolean, userId: number) => void
-    followingInProgres: number[]
+    followingInProgres: number[],
+    onFilterChanged : (filter : FilterType) => void
 }
 
 const Users: React.FC<UsersPropsType> = (props) => {
@@ -29,6 +31,9 @@ const Users: React.FC<UsersPropsType> = (props) => {
     }
     return (
         <div>
+            <div>
+                <UsersSearchForm onFilterChanged={props.onFilterChanged}/>
+            </div>
             <div>
                 {
                     portionNumber > 1 &&

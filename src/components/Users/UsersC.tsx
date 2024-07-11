@@ -4,8 +4,10 @@ import Users from './Users'
 
 
 import './Users.css'
+import { FilterType } from '../../state/usersReducer'
 
 type UsersPropsType = {
+    filter : FilterType
     users: Array<any>
     unfollow: (userId: number) => void
     follow: (userId: number) => void,
@@ -18,7 +20,7 @@ type UsersPropsType = {
     toggleIsFetching: (isFetching: boolean) => void
     toggleFollowingProgress: (isFetching: boolean, userId: number) => void
     followingInProgres: number[],
-    getUsers: (currentPage: number, pageSize: number) => void
+    getUsers: (currentPage: number, pageSize: number, term : string) => void
 }
 
 
@@ -27,12 +29,17 @@ class UsersAPIComponnet extends React.Component<UsersPropsType> {
 
 
     componentDidMount(): void {
-        this.props.getUsers(this.props.currentPage, this.props.pageSize)
+        this.props.getUsers(this.props.currentPage, this.props.pageSize, '')
     }
 
 
     onPageChnaged = (page: number) => {
-        this.props.getUsers(page, this.props.pageSize)
+        
+        this.props.getUsers(page, this.props.pageSize, this.props.filter.term)
+    }
+
+    onFilterChanged = (filter : FilterType) => {
+        this.props.getUsers(1, this.props.pageSize, filter.term)
     }
 
     render() {
@@ -52,6 +59,7 @@ class UsersAPIComponnet extends React.Component<UsersPropsType> {
                     follow={this.props.follow}
                     toggleFollowingProgress={this.props.toggleFollowingProgress}
                     followingInProgres={this.props.followingInProgres}
+                    onFilterChanged={this.onFilterChanged}
                 />
             </div>
         )

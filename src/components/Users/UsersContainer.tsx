@@ -9,7 +9,8 @@ const mapStateToProps = (state: any) => {
         totalUsersCount: state.usersPage.totalUsersCount,
         currentPage: state.usersPage.currentPage,
         isFettching: state.usersPage.isFettching,
-        followingInProgres : state.usersPage.followingInProgres
+        followingInProgres : state.usersPage.followingInProgres,
+        filter : state.usersPage.filter
     }
 }
 

@@ -1,6 +1,9 @@
 
+import { Dispatch } from "redux"
 import { socialAPI } from "../api/api"
 import { PhotosType } from "../types/types"
+import { ThunkAction } from "redux-thunk"
+import { AppStateType } from "./store"
 // import { AppDispatch } from "./store"
 
 const FOLLOW = 'FOLLOW'
@@ -10,6 +13,7 @@ const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE'
 const SET_TOTAL_USERS_COUNT = 'SET_TOTAL_USERS_COUNT'
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING'
 const TOGGLE_IS_FOLLOWING_IN_PROGRES = 'TOGGLE_IS_FOLLOWING_IN_PROGRES'
+const SET_FILTER = 'SET_FILTER'
 
 export type UserType = {
     name: string,
@@ -26,11 +30,15 @@ const initialState = {
     totalUsersCount: 0,
     currentPage: 1,
     isFettching: false,
-    followingInProgres: [] as Array<number>
+    followingInProgres: [] as Array<number>,
+    filter : {
+        term : ''
+    }
 }
 type initialState = typeof initialState
-
-const usersReducer = (state = initialState, action: any): initialState => {
+export type FilterType = typeof initialState.filter
+type ActionsType = FollowSuccessActionType | UnfollowSuccessActionType | SetUserActionType | SetCurrentPageActionType | SetTotalUserCountActionType | ToggleIsFetchingActionType | ToggleFollowingProgressActionType |  SetFilterActionType
+const usersReducer = (state = initialState, action: ActionsType): initialState => {
     switch (action.type) {
         case FOLLOW: {
             return {
@@ -92,6 +100,12 @@ const usersReducer = (state = initialState, action: any): initialState => {
                     : state.followingInProgres.filter(id => id !== action.userId)
 
             }
+
+        case SET_FILTER :
+            return {
+                ...state,
+                filter : {term : action.payload}
+            }
         default:
             return state
     }
@@ -135,13 +149,21 @@ type ToggleFollowingProgressActionType = {
 }
 export const toggleFollowingProgress = (isFetching: boolean, userId: number): ToggleFollowingProgressActionType => ({ type: TOGGLE_IS_FOLLOWING_IN_PROGRES, isFetching: isFetching, userId: userId })
 
+///
 
-export const getUsers = (currentPage: number, pageSize: number) => {
-    return (dispatch: any) => {
+type SetFilterActionType = {
+    type : typeof SET_FILTER,
+    payload : string
+}
+
+export const setFilter = (term : string) : SetFilterActionType => ({type : SET_FILTER, payload : term})
+
+export const getUsers = (currentPage: number, pageSize: number, term : string)  => {
+    return (dispatch: Dispatch<ActionsType>) => {
 
         dispatch(toggleIsFetching(true));
-
-        socialAPI.getUsers(currentPage, pageSize)
+        dispatch(setFilter(term))
+        socialAPI.getUsers(currentPage, pageSize, term)
             .then((data: any) => {
                 dispatch(toggleIsFetching(false))
                 dispatch(setTotalUserCount(data.totalCount))
@@ -151,7 +173,7 @@ export const getUsers = (currentPage: number, pageSize: number) => {
 }
 
 export const follow = (userId: number) => {
-    return (dispatch: any) => {
+    return (dispatch: Dispatch<ActionsType>) => {
 
         dispatch(toggleFollowingProgress(true, userId))
 
@@ -169,7 +191,7 @@ export const follow = (userId: number) => {
 }
 
 export const unfollow = (userId: number) => {
-    return (dispatch: any) => {
+    return (dispatch: Dispatch<ActionsType>) => {
 
         dispatch(toggleFollowingProgress(true, userId))
 

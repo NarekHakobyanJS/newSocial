@@ -1,4 +1,5 @@
 import axios from "axios";
+import { ProfileAPIType } from "../state/profileReducer";
 
 
 const instance = axios.create({
@@ -10,8 +11,8 @@ const instance = axios.create({
 })
 
 export const socialAPI = {
-    getUsers(page: number = 1, pageSize: number = 30) {
-        return instance.get(`/users?page=${page}&count=${pageSize}`)
+    getUsers(page: number = 1, pageSize: number = 30, term : string = '') {
+        return instance.get(`/users?page=${page}&count=${pageSize}&term=${term}`)
             .then((response) => response.data)
     },
     follow(userId: number) {
@@ -44,14 +45,23 @@ export const profileAPI = {
             }
         })
     },
-    saveProfile(profile : any) {
+    saveProfile(profile : ProfileAPIType) {
         return instance.put(`/profile`, profile)
     }
 }
 
+type MeResponseType = {
+    data : {
+        id : number,
+        email : string,
+        login : string
+    },
+    resultCode : number,
+    messages : Array<string>
+}
 export const authAPI = {
     me(){
-        return instance.get('/auth/me')
+        return instance.get<MeResponseType>('/auth/me')
     },
     login(email : string, password : string, rememberMe : boolean = false){
         return instance.post('/auth/login', {email, password, rememberMe})
