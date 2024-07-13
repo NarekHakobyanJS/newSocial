@@ -1,38 +1,67 @@
-import React, { useState } from 'react'
-import { FilterType, UserType } from '../../state/usersReducer'
-import { NavLink } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { getUsers } from '../../state/usersReducer'
 import UsersSearchForm from './UsersSearchForm'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppStateType } from '../../state/store'
+import User from './User/User'
+import { useLocation,  useSearchParams } from 'react-router-dom'
+
+
+
+// Импортируем ХУК из либы react-router-dom
+// import { useLocation,  useSearchParams } from "react-router-dom";
+
+// useSearchParams - это ХУК который позволяет читать адресную строку. Соотвественно, если это ХУК мы должны проинициализировать начальным значением. В качестве начального выступает текущее значение адресной строки
+
+// const location = useLocation()
+
+// const [searchParams] = useSearchParams(location.search)
+
+// Нам важно вернуть объект из трех свойств. Для этого можно использоваться Object.fromEntries, который вернет объект на базе массива состоящий из ключ-значение
+
+// let parsed = Object.fromEntries([...searchParams])
+
 
 type UsersPropsType = {
-    totalUsersCount: number,
-    pageSize: number,
-    currentPage: number,
-    users: Array<UserType>,
-    onPageChnaged: (p: number) => void,
-    unfollow: (userId: number) => void,
-    follow: (userId: number) => void,
-    toggleFollowingProgress: (isFetching: boolean, userId: number) => void
-    followingInProgres: number[],
-    onFilterChanged : (filter : FilterType) => void
 }
 
 const Users: React.FC<UsersPropsType> = (props) => {
+
+// const location = useLocation()
+
+// const [searchParams] = useSearchParams(location.search)
+    
+//     let parsed = Object.fromEntries([...searchParams])
+//     console.log(parsed);
+    const dispatch = useDispatch<any>()
+    const { totalUsersCount, currentPage, pageSize, users, followingInProgres, isFettching } = useSelector((state: AppStateType) => state.usersPage)
+    const { term } = useSelector((state: AppStateType) => state.usersPage.filter)
+
+    useEffect(() => {
+        dispatch(getUsers(currentPage, pageSize, ''))
+    }, [])
+
+    const onPageChnaged = (page: number): void => {
+        dispatch(getUsers(page, pageSize, term))
+    }
 
     let portionSize = 10
     let [portionNumber, setPortionNumber] = useState(1)
     let leftPortionPageNumber = (portionNumber - 1) * portionSize + 1
     let rightPortionPageNumber = portionNumber * portionSize
-    let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize);
+    let pagesCount = Math.ceil(totalUsersCount / pageSize);
 
     let pages = []
 
     for (let i = 1; i <= pagesCount; i++) {
         pages.push(i)
     }
+
+
     return (
         <div>
             <div>
-                <UsersSearchForm onFilterChanged={props.onFilterChanged}/>
+                <UsersSearchForm />
             </div>
             <div>
                 {
@@ -45,8 +74,8 @@ const Users: React.FC<UsersPropsType> = (props) => {
                         .map((p: number) => {
                             return <button
                                 key={p}
-                                onClick={() => props.onPageChnaged(p)}
-                                className={p === props.currentPage ? 'activeBTN' : ''}>{p}</button>
+                                onClick={() => onPageChnaged(p)}
+                                className={p === currentPage ? 'activeBTN' : ''}>{p}</button>
                         })
                 }
                 {
@@ -55,31 +84,13 @@ const Users: React.FC<UsersPropsType> = (props) => {
                 }
             </div>
             {
-                props.users.map((user: any) => {
-                    return <div key={user.id}>
-                        <span>
-                            <div>
-                                <NavLink to={'/profile/' + user.id}>
-                                    <img width={120} src={user.photos.small === null ? 'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/corporate-user-icon.png' : user.photos.small} />
-                                </NavLink>
-                            </div>
-                            <div>
-                                {user.followed
-                                    ? <button
-
-                                        disabled={props.followingInProgres.some((id) => id === user.id)}
-                                        onClick={() => { props.unfollow(user.id) }} >unfollow</button>
-                                    : <button
-                                        disabled={props.followingInProgres.some((id) => id === user.id)}
-                                        onClick={() => { props.follow(user.id) }}>follow</button>}
-                            </div>
-                        </span>
-                        <span>
-                            <h4>{user.name}</h4>
-                            <h3>{user.id}</h3>
-                        </span>
-                    </div>
-                })
+                isFettching ? <h1>loading...</h1> :
+                    users.map((user: any) => {
+                        return <User
+                            followingInProgres={followingInProgres}
+                            user={user}
+                            key={user.id} />
+                    })
             }
         </div>
     )

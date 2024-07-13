@@ -11,7 +11,7 @@ import React from 'react';
 
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
-const UsersContainer = React.lazy(() => import('./components/Users/UsersContainer'));
+const Users = React.lazy(() => import('./components/Users/Users'));
 
 function App() {
   const dispatch = useDispatch<any>()
@@ -27,7 +27,7 @@ function App() {
         <Routes>
           <Route path='/profile/:id' element={<Suspense fallback={<h1>loding...</h1>}><ProfileContainer /></Suspense>} />
           <Route path='/dialogs' element={<Suspense fallback={<h1>loding...</h1>}><DialogsContainer updateNewMessageBody={() => {}}/></Suspense>} />
-          <Route path="/users" element={<Suspense fallback={<h1>loding...</h1>}><UsersContainer /></Suspense>}/>
+          <Route path="/users" element={<Suspense fallback={<h1>loding...</h1>}><Users /></Suspense>}/>
           <Route path='/login' element={<Login /> }/>
           <Route path='*' element={<><img src='https://i0.wp.com/learn.onemonth.com/wp-content/uploads/2017/08/1-10.png?fit=845%2C503&ssl=1' /></>}/>
         </Routes>
