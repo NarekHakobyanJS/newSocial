@@ -1,41 +1,36 @@
 import React, { useEffect, useState } from 'react'
-import { getUsers } from '../../state/usersReducer'
+import { getUsers, setCurrentPage } from '../../state/usersReducer'
 import UsersSearchForm from './UsersSearchForm'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppStateType } from '../../state/store'
 import User from './User/User'
-import { useLocation,  useSearchParams } from 'react-router-dom'
-
-
-
-// Импортируем ХУК из либы react-router-dom
-// import { useLocation,  useSearchParams } from "react-router-dom";
-
-// useSearchParams - это ХУК который позволяет читать адресную строку. Соотвественно, если это ХУК мы должны проинициализировать начальным значением. В качестве начального выступает текущее значение адресной строки
-
-// const location = useLocation()
-
-// const [searchParams] = useSearchParams(location.search)
-
-// Нам важно вернуть объект из трех свойств. Для этого можно использоваться Object.fromEntries, который вернет объект на базе массива состоящий из ключ-значение
-
-// let parsed = Object.fromEntries([...searchParams])
-
+import { useLocation, useSearchParams } from 'react-router-dom'
 
 type UsersPropsType = {
 }
 
 const Users: React.FC<UsersPropsType> = (props) => {
 
-// const location = useLocation()
+    const location = useLocation()
 
-// const [searchParams] = useSearchParams(location.search)
+   
     
-//     let parsed = Object.fromEntries([...searchParams])
-//     console.log(parsed);
+    const [searchParams, setSearchParams] = useSearchParams(location.search)
+
+    let parsed = Object.fromEntries([...searchParams])
+   
+    
+    
     const dispatch = useDispatch<any>()
     const { totalUsersCount, currentPage, pageSize, users, followingInProgres, isFettching } = useSelector((state: AppStateType) => state.usersPage)
-    const { term } = useSelector((state: AppStateType) => state.usersPage.filter)
+    let { term } = useSelector((state: AppStateType) => state.usersPage.filter)
+
+    useEffect(() => {
+        setSearchParams({
+            term : term,
+            page : '' + currentPage
+        })
+    }, [term, currentPage])
 
     useEffect(() => {
         dispatch(getUsers(currentPage, pageSize, ''))
@@ -43,6 +38,7 @@ const Users: React.FC<UsersPropsType> = (props) => {
 
     const onPageChnaged = (page: number): void => {
         dispatch(getUsers(page, pageSize, term))
+        dispatch(setCurrentPage(page))
     }
 
     let portionSize = 10

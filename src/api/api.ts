@@ -11,7 +11,7 @@ const instance = axios.create({
 })
 
 export const socialAPI = {
-    getUsers(page: number = 1, pageSize: number = 30, term : string = '') {
+    getUsers(page: number, pageSize: number = 30, term : string = '') {
         return instance.get(`/users?page=${page}&count=${pageSize}&term=${term}`)
             .then((response) => response.data)
     },

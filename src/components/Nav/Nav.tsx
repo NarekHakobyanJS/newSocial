@@ -14,6 +14,7 @@ const Nav = () => {
             <NavLink to={`/profile/${userId}`}>profile</NavLink>
             <NavLink to='/dialogs'>dialogs</NavLink>
             <NavLink to='/users'>users</NavLink>
+            <NavLink to='/chat'>chat</NavLink>
         </div>
     </nav>
   )

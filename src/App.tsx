@@ -12,7 +12,7 @@ import React from 'react';
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
 const Users = React.lazy(() => import('./components/Users/Users'));
-
+const Chat = React.lazy(() => import('./components/Chat/Chat'))
 function App() {
   const dispatch = useDispatch<any>()
   useEffect(() => {
@@ -29,6 +29,7 @@ function App() {
           <Route path='/dialogs' element={<Suspense fallback={<h1>loding...</h1>}><DialogsContainer updateNewMessageBody={() => {}}/></Suspense>} />
           <Route path="/users" element={<Suspense fallback={<h1>loding...</h1>}><Users /></Suspense>}/>
           <Route path='/login' element={<Login /> }/>
+          <Route path='/chat' element={<Suspense fallback={<h1>loding...</h1>}><Chat /></Suspense> }/>
           <Route path='*' element={<><img src='https://i0.wp.com/learn.onemonth.com/wp-content/uploads/2017/08/1-10.png?fit=845%2C503&ssl=1' /></>}/>
         </Routes>
       </div>
